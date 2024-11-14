@@ -28,6 +28,8 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
+        with:
+          fetch-depth: 0 
       - name: Setup Pages
         uses: actions/configure-pages@v5
       - name: Build with Jekyll
@@ -37,7 +39,11 @@ jobs:
           destination: ./_site
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
-
+      - name: generate-sitemap
+        uses: cicirello/generate-sitemap@v1.10.1
+        with:
+          base-url-path: https://blendercharacterproject.org/
+          
   # Deployment job
   deploy:
     environment:
@@ -49,8 +55,5 @@ jobs:
       - name: Deploy to GitHub Pages
         id: deployment
         uses: actions/deploy-pages@v4
-      - name: generate-sitemap
-        uses: cicirello/generate-sitemap@v1.10.1
-        with:
-          base-url-path: https://blendercharacterproject.org/
+
             
