@@ -30,6 +30,13 @@ jobs:
         uses: actions/checkout@v4
         with:
           fetch-depth: 0 
+      - name: Publish
+        id: deployment
+        uses: Kjuly/sphinx-publisher@main
+        with:
+          source_root: CharMorph_Docs/docs/source
+          build_root: build
+          default_lang: en
       - name: generate-sitemap
         id: sitemap
         uses: cicirello/generate-sitemap@v1.10.1
