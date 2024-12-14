@@ -29,7 +29,9 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
         with:
-          fetch-depth: 0 
+          fetch-depth: 0
+          token: ${{ secrets.PAT }}
+          submodules: true
       - name: Publish
         id: deployment
         uses: Kjuly/sphinx-publisher@main
