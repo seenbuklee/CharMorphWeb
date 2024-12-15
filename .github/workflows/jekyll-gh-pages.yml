@@ -53,6 +53,8 @@ jobs:
           destination: ./_site
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
+        with:
+          name: build-artifacts-${{ runner.os }}-${{ github.run_id }}
 
           
   # Deployment job
