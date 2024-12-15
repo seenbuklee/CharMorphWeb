@@ -52,7 +52,7 @@ jobs:
           source: ./
           destination: ./_site
       - name: Upload artifact
-        uses: actions/upload-pages-artifact@v3.0.1
+        uses: actions/upload-pages-artifact@v2
         with:
           name: build-artifacts-${{ runner.os }}-${{ github.run_id }}
 
@@ -69,6 +69,6 @@ jobs:
         uses: actions/configure-pages@v4
       - name: Deploy to GitHub Pages
         id: deployment
-        uses: actions/deploy-pages@v4
+        uses: actions/deploy-pages@v3
 
             
