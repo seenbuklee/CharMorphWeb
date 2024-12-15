@@ -34,7 +34,7 @@ jobs:
           submodules: true
       - name: Publish
         id: deployment
-        uses: Kjuly/sphinx-publisher@main
+        uses: Kjuly/sphinx-builder@1.4.0
         with:
           source_root: CharMorph_Docs/docs/source
           build_root: build
