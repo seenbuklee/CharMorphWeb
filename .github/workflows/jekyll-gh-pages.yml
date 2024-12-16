@@ -37,7 +37,7 @@ jobs:
         uses: Kjuly/sphinx-publisher@main
         with:
           source_root: CharMorph_Docs/docs/source
-          build_root: CharMorph_Docs/docs/build
+          build_root: build
           default_lang: en
       - name: generate-sitemap
         id: sitemap
@@ -46,16 +46,11 @@ jobs:
           base-url-path: https://blendercharacterproject.org/      
       - name: Setup Pages
         uses: actions/configure-pages@v5
-      - name: Build with Jekyll
-        uses: actions/jekyll-build-pages@v1
-        with:
-          source: ./
-          destination: ./main
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
         with:
           name: github-pages-${{ runner.os }}-${{ github.run_id }}-Main
-          path: main/
+          path: '.'
           
   # Deployment job
   deploy:
