@@ -37,7 +37,7 @@ jobs:
         uses: Kjuly/sphinx-publisher@main
         with:
           source_root: CharMorph_Docs/docs/source
-          build_root: build
+          build_root: docs
           default_lang: en
       - name: generate-sitemap
         id: sitemap
