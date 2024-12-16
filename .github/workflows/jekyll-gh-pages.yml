@@ -31,7 +31,7 @@ jobs:
         with:
           fetch-depth: 0
           token: ${{ secrets.PAT }}
-          submodules: true
+          submodules: false
       - name: generate-sitemap
         id: sitemap
         uses: cicirello/generate-sitemap@v1.10.1
@@ -51,6 +51,12 @@ jobs:
   build-docs:
       runs-on: ubuntu-latest
       steps:
+       - name: Checkout
+         uses: actions/checkout@v4
+         with:
+          fetch-depth: 0
+          token: ${{ secrets.PAT }}
+          submodules: true
        - name: Publish
          id: deployment
          uses: Kjuly/sphinx-publisher@1.3.1
