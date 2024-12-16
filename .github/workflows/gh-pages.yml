@@ -1,6 +1,6 @@
-# Sample workflow for building and deploying a Jekyll site to GitHub Pages
-name: Deploy Jekyll with GitHub Pages dependencies preinstalled
-
+name: Static Github pages with Sphinx-Builder 
+ # Requires developers to Provide a PAT in Settings -> secrets and variables -> actions due to using Submodules to get the Docs Repo
+ # Also, developers will have to regularly update  submodules. 
 on:
   # Runs on pushes targeting the default branch
   push:
