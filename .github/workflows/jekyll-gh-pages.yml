@@ -32,13 +32,6 @@ jobs:
           fetch-depth: 0
           token: ${{ secrets.PAT }}
           submodules: true
-      - name: Publish
-        id: deployment
-        uses: Kjuly/sphinx-publisher@main
-        with:
-          source_root: CharMorph_Docs/docs/source
-          build_root: build
-          default_lang: en
       - name: generate-sitemap
         id: sitemap
         uses: cicirello/generate-sitemap@v1.10.1
@@ -51,6 +44,13 @@ jobs:
         with:
           source: ./
           destination: ./main
+      - name: Publish
+        id: deployment
+        uses: Kjuly/sphinx-publisher@main
+        with:
+          source_root: CharMorph_Docs/docs/source
+          build_root: build
+          default_lang: en
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
         with:
