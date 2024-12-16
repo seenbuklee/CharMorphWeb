@@ -48,8 +48,7 @@ jobs:
         uses: actions/upload-pages-artifact@v3
         with:
           name: github-pages-${{ runner.os }}-${{ github.run_id }}-Main
-          path: | 
-           ./main
+          path: main/
   build-docs:
       runs-on: ubuntu-latest
       steps:
@@ -77,8 +76,7 @@ jobs:
          uses: actions/upload-pages-artifact@v3
          with:
           name: github-pages-${{ runner.os }}-${{ github.run_id }}-Docs
-          path: | 
-           ./docs
+          path: docs/
           
   # Deployment job
   deploy:
