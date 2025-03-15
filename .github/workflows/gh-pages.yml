@@ -44,7 +44,7 @@ jobs:
         uses: cicirello/generate-sitemap@v1.10.1
         with:
           base-url-path: https://blendercharacterproject.org/
-          exclude-paths: google52062560e62d17f9.html
+          exclude-paths: /docs/source/ /google52062560e62d17f9.html
       - name: Setup Pages
         uses: actions/configure-pages@v5
       - name: Upload artifact
