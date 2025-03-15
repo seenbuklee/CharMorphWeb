@@ -4,152 +4,228 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="shortcut icon" type="image/x-icon" href="./assets/favicon.ico">
-    <title>Charmorph | Blender Character Project </title>
+    <title>CharMorph | Professional 3D Character Creation for Blender</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
-        .scroll-bg {
-            background: url('./assets/CloseupFlat.jpg') no-repeat center;
+        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap');
+        
+        body {
+            font-family: 'Poppins', sans-serif;
+        }
+        
+        .hero-section {
+            background: linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7)), url('./assets/CloseupFlat.jpg') no-repeat center;
             background-size: cover;
-            height: 50vh;
+            height: 85vh;
             position: relative;
         }
 
-        .scroll-bg .content {
-            position: absolute;
-            top: 0;
-            left: 5%;
-            text-align: left;
-            color: black;
+        .primary-color {
+            color: #E53E3E;
         }
-
-        .scroll-bg .content p {
-            color: black;
+        
+        .primary-bg {
+            background-color: #E53E3E;
         }
-
-        @media (max-width: 768px) {
-            .scroll-bg {
-                background-size: contain;
-            }
+        
+        .dark-bg {
+            background-color: #1A1A1A;
+        }
+        
+        .secondary-bg {
+            background-color: #333333;
+        }
+        
+        .feature-card:hover {
+            transform: translateY(-5px);
+            transition: all 0.3s ease;
+        }
+        
+        .smooth-scroll {
+            scroll-behavior: smooth;
+        }
+        
+        .gradient-text {
+            background: linear-gradient(90deg, #E53E3E, #F56565);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
         }
     </style>
 </head>
-<body class="font-sans text-gray-800">
+<body class="font-sans text-gray-800 dark-bg">
 
     <!-- Header -->
-    <header class="bg-[#262626] p-4 md:p-6">
-        <div class="container mx-auto flex flex-wrap justify-between items-center">
+    <header class="dark-bg sticky top-0 z-50 shadow-lg">
+        <div class="container mx-auto flex flex-wrap justify-between items-center py-4 px-6">
             <div class="flex flex-shrink-0 items-center">
-                <a href="./index.html">
-                    <img class="h-10 w-auto md:h-16" src="./assets/BlenderCharacterProject_Icon.svg" alt="Blender Character Project Logo">
+                <a href="./index.html" class="flex items-center">
+                    <img class="h-10 w-auto md:h-12" src="./assets/BlenderCharacterProject_Icon.svg" alt="CharMorph Logo">
+                    <h1 class="text-xl md:text-2xl font-bold primary-color ml-2 tracking-tight">
+                        CharMorph
+                    </h1>
                 </a>
-                <h1 class="text-xl md:text-2xl font-bold text-red-600 ml-2">
-                    <a href="./index.html">CharMorph | Blender Character Project </a>
-                </h1>
             </div>
-            <nav class="mt-2 md:mt-0 space-x-4">
-                <a href="./gallery.html" class="text-gray-300 hover:text-red-600">Gallery</a>
-                <a href="./about.html" class="text-gray-300 hover:text-red-600">About</a>
-                <a href="./docs/html/" class="text-gray-300 hover:text-red-600">Docs</a>
+            <nav class="hidden md:flex items-center space-x-8">
+                <a href="./gallery.html" class="text-gray-300 hover:text-red-500 transition duration-300">Gallery</a>
+                <a href="./about.html" class="text-gray-300 hover:text-red-500 transition duration-300">About</a>
+                <a href="./docs/html/" class="text-gray-300 hover:text-red-500 transition duration-300">Documentation</a>
+                <button onclick="window.location.href='download.html'" class="bg-red-500 text-white px-6 py-2 rounded-lg hover:bg-red-700 transition duration-300 font-medium">Download</button>
             </nav>
-            <button onclick="window.location.href='download.html'" class="bg-red-500 text-black px-4 py-2 rounded-full hover:bg-red-600 mt-2 md:mt-0">Download</button>
+            <button id="mobile-menu-button" class="md:hidden text-white focus:outline-none">
+                <svg class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-7 6h7"></path>
+                </svg>
+            </button>
+        </div>
+        <!-- Mobile menu (hidden by default) -->
+        <div id="mobile-menu" class="md:hidden hidden secondary-bg py-4 px-6">
+            <a href="./gallery.html" class="block text-gray-300 hover:text-red-500 py-2">Gallery</a>
+            <a href="./about.html" class="block text-gray-300 hover:text-red-500 py-2">About</a>
+            <a href="./docs/html/" class="block text-gray-300 hover:text-red-500 py-2">Documentation</a>
+            <button onclick="window.location.href='download.html'" class="mt-4 w-full bg-red-500 text-white px-4 py-2 rounded-lg hover:bg-red-700">Download</button>
         </div>
     </header>
 
-    <!-- Hero Section with GIF background -->
-    <section class="scroll-bg bg-[#4a4a4a]" id="scrollBg">
-        <div class="mx-auto bg flex flex-col items-center justify-center text-white h-5/6 px-4 md:px-0">
-            <h2 class="text-3xl md:text-4xl font-extrabold text-gray-300 text-center">Transform Your Blender Creations with Charmorph</h2>
-            <p class="mt-4 text-center text-gray-300">
-                Charmorph makes it easier than ever to create realistic 3D Characters with ease and precision.
+    <!-- Hero Section -->
+    <section class="hero-section flex items-center justify-center">
+        <div class="container mx-auto text-center px-4 md:px-0">
+            <h2 class="text-4xl md:text-6xl font-bold text-white mb-6 leading-tight">Professional Character Creation <span class="gradient-text">Simplified</span></h2>
+            <p class="text-xl md:text-2xl text-gray-300 max-w-2xl mx-auto mb-10 leading-relaxed">
+                Create stunning, production-ready 3D characters with intuitive tools designed for artists at every skill level.
             </p>
-            <div class="cta-buttons mt-6 flex justify-center space-x-2 md:space-x-4">
-                <button class="bg-red-500 text-black px-4 md:px-6 py-2 rounded-full hover:bg-red-600" onclick="window.location.href='download.html'">Download</button>
+            <div class="flex flex-col sm:flex-row justify-center gap-4">
+                <button onclick="window.location.href='download.html'" class="bg-red-500 text-white px-8 py-3 rounded-lg hover:bg-red-700 transition duration-300 text-lg font-medium">Download Free</button>
+                <button onclick="window.location.href='./gallery.html'" class="bg-transparent border-2 border-white text-white px-8 py-3 rounded-lg hover:bg-white hover:text-gray-900 transition duration-300 text-lg font-medium">View Gallery</button>
             </div>
         </div>
     </section>
 
     <!-- Features Section -->
-    <section class="py-8 md:py-12 bg-[#262626]">
-        <div class="container mx-auto text-center px-4 md:px-0">
-            <h3 class="text-2xl md:text-3xl font-semibold text-gray-100">Empowering Users with Intuitive Tools</h3>
-            <p class="mt-4 text-gray-400">Discover how Charmorph enhances your 3D modeling experience.</p>
-            <div class="mt-6 md:mt-8 flex flex-col md:flex-row justify-around space-y-8 md:space-y-0">
-                <div class="bg-[#4a4a4a] p-6 rounded-lg shadow-lg">
-                    <h4 class="text-lg md:text-xl font-semibold text-red-600">Straight to the Point.</h4>
-                    <p class="text-gray-300 mt-2">Intuitive design makes the character creation process straightforward and enjoyable.</p>
+    <section class="py-20 secondary-bg">
+        <div class="container mx-auto px-6">
+            <div class="text-center mb-16">
+                <h3 class="text-3xl md:text-4xl font-bold text-white mb-4">Why Choose CharMorph</h3>
+                <div class="w-24 h-1 bg-red-500 mx-auto mb-6"></div>
+                <p class="text-xl text-gray-400 max-w-2xl mx-auto">Powerful tools that streamline your character creation workflow.</p>
+            </div>
+            
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-10">
+                <div class="dark-bg p-8 rounded-xl shadow-lg feature-card transition duration-300">
+                    <div class="bg-red-500 bg-opacity-10 p-3 rounded-full w-16 h-16 flex items-center justify-center mb-6">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 text-red-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z" />
+                        </svg>
+                    </div>
+                    <h4 class="text-xl font-semibold text-white mb-4">Intuitive Workflow</h4>
+                    <p class="text-gray-400">Create complex characters in minutes with our streamlined design process that focuses on creativity, not complexity.</p>
                 </div>
-                <div class="bg-[#4a4a4a] p-6 rounded-lg shadow-lg">
-                    <h4 class="text-lg md:text-xl font-semibold text-red-600">Versatile Tools</h4>
-                    <p class="text-gray-300 mt-2">A wide range of tools to meet your specific needs.</p>
+                
+                <div class="dark-bg p-8 rounded-xl shadow-lg feature-card transition duration-300">
+                    <div class="bg-red-500 bg-opacity-10 p-3 rounded-full w-16 h-16 flex items-center justify-center mb-6">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 text-red-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6V4m0 2a2 2 0 100 4m0-4a2 2 0 110 4m-6 8a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4m6 6v10m6-2a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4" />
+                        </svg>
+                    </div>
+                    <h4 class="text-xl font-semibold text-white mb-4">Versatile Customization</h4>
+                    <p class="text-gray-400">Fine-tune every aspect of your character with precise controls and extensive customization options.</p>
                 </div>
-                <div class="bg-[#4a4a4a] p-6 rounded-lg shadow-lg">
-                    <h4 class="text-lg md:text-xl font-semibold text-red-600">Community Support</h4>
-                    <p class="text-gray-300 mt-2">Join a vibrant community of creators.</p>
+                
+                <div class="dark-bg p-8 rounded-xl shadow-lg feature-card transition duration-300">
+                    <div class="bg-red-500 bg-opacity-10 p-3 rounded-full w-16 h-16 flex items-center justify-center mb-6">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 text-red-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
+                        </svg>
+                    </div>
+                    <h4 class="text-xl font-semibold text-white mb-4">Community Powered</h4>
+                    <p class="text-gray-400">Join a thriving community of creators who share resources, techniques, and inspiration.</p>
                 </div>
             </div>
         </div>
     </section>
 
-    <!-- Article Section -->
-    <section class="py-8 md:py-12 bg-[#262626]">
-        <div class="container mx-auto text-center px-4 md:px-0">
-            <h3 class="text-2xl md:text-3xl font-semibold text-gray-300">Master Blender with CharMorph</h3>
-            <p class="mt-4 text-gray-400">Unveil new dimensions of creativity using CharMorph's dynamic features.</p>
-            <div class="mt-6 md:mt-8 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-                <div class="bg-[#4a4a4a] p-6 rounded-lg shadow-lg">
-                    <img src="./assets/Couchpreview.jpg" alt="Feature Image" class="rounded-t-lg mb-4">
-                    <h4 class="text-lg md:text-xl font-semibold text-red-600">Charmorph Simplifies 3D Modeling Tasks Quickly</h4>
-                    <p class="text-gray-300 mt-2">Charmorph has feature-rich characters that will reduce headaches when creating your next Character.</p>
+    <!-- Showcase Section -->
+    <section class="py-20 dark-bg">
+        <div class="container mx-auto px-6">
+            <div class="text-center mb-16">
+                <h3 class="text-3xl md:text-4xl font-bold text-white mb-4">Professional Results</h3>
+                <div class="w-24 h-1 bg-red-500 mx-auto mb-6"></div>
+                <p class="text-xl text-gray-400 max-w-2xl mx-auto">See what's possible with CharMorph's powerful toolset.</p>
+            </div>
+            
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                <div class="secondary-bg rounded-xl overflow-hidden shadow-lg group">
+                    <div class="overflow-hidden">
+                        <img src="./assets/Couchpreview.jpg" alt="Character Preview" class="w-full h-64 object-cover transform group-hover:scale-105 transition duration-500">
+                    </div>
+                    <div class="p-6">
+                        <h4 class="text-xl font-semibold text-red-500 mb-3">Rapid Character Development</h4>
+                        <p class="text-gray-300">Create complete, animation-ready characters in a fraction of the time with our pre-configured setups.</p>
+                    </div>
                 </div>
-                <div class="bg-[#4a4a4a] p-6 rounded-lg shadow-lg">
-                    <img src="./assets/preview1.jpg" alt="Feature Image" class="rounded-t-lg mb-4">
-                    <h4 class="text-lg md:text-xl font-semibold text-red-600">Maximize Blender's Potential with Charmorph Plugin</h4>
-                    <p class="text-gray-300 mt-2">From topology-bending character modeling to world-class performance, you will always find something new in Charmorph!</p>
+                
+                <div class="secondary-bg rounded-xl overflow-hidden shadow-lg group">
+                    <div class="overflow-hidden">
+                        <img src="./assets/preview1.jpg" alt="Modeling Features" class="w-full h-64 object-cover transform group-hover:scale-105 transition duration-500">
+                    </div>
+                    <div class="p-6">
+                        <h4 class="text-xl font-semibold text-red-500 mb-3">Advanced Modeling Tools</h4>
+                        <p class="text-gray-300">Professional-grade topology and modeling tools deliver production-quality characters ready for any project.</p>
+                    </div>
                 </div>
-                <div class="bg-[#4a4a4a] p-6 rounded-lg shadow-lg">
-                    <img src="./assets/side_eye.jpg" alt="Feature Image" class="rounded-t-lg mb-4">
-                    <h4 class="text-lg md:text-xl font-semibold text-red-600">Fully FOSS</h4>
-                    <p class="text-gray-300 mt-2">Charmorph is 100% Free and Open Source with no registration, hidden licenses, or costs.</p>
+                
+                <div class="secondary-bg rounded-xl overflow-hidden shadow-lg group">
+                    <div class="overflow-hidden">
+                        <img src="./assets/side_eye.jpg" alt="Open Source" class="w-full h-64 object-cover transform group-hover:scale-105 transition duration-500">
+                    </div>
+                    <div class="p-6">
+                        <h4 class="text-xl font-semibold text-red-500 mb-3">100% Free & Open Source</h4>
+                        <p class="text-gray-300">No hidden costs, subscriptions, or limitations. Professional-grade tools accessible to everyone.</p>
+                    </div>
                 </div>
             </div>
         </div>
     </section>
 
     <!-- CTA Section -->
-    <section class="py-8 md:py-12 bg-red-500">
-        <div class="container mx-auto text-center text-white px-4 md:px-0">
-            <h3 class="text-2xl md:text-3xl font-semibold">Ready to Transform Your Blender Experience?</h3>
-            <p class="mt-4">Get Charmorph today for free and witness the difference.</p>
-            <div class="mt-6 flex justify-center">
-                <button class="bg-white text-red-600 px-4 md:px-6 py-2 rounded-full hover:bg-gray-200" onclick="window.location.href='download.html'">Download</button>
-            </div>
+    <section class="py-20 bg-red-500">
+        <div class="container mx-auto text-center px-6">
+            <h3 class="text-3xl md:text-4xl font-bold text-white mb-6">Ready to Transform Your Blender Experience?</h3>
+            <p class="text-xl text-white/90 max-w-2xl mx-auto mb-8">Join hundreds of artists who've elevated their character creation workflow with CharMorph.</p>
+            <button onclick="window.location.href='download.html'" class="bg-white text-red-600 px-8 py-3 rounded-lg hover:bg-gray-100 transition duration-300 text-lg font-medium">Download Now</button>
         </div>
     </section>
 
     <!-- Footer -->
-    <footer class="py-6 bg-[#262626]">
-        <div class="container mx-auto flex flex-wrap justify-between items-center px-4 md:px-0">
-            <p class="text-gray-300">© 2024 CharMorph</p>
-            <div class="flex space-x-4 mt-4 md:mt-0">
-                <a href="https://github.com/Upliner/CharMorph">
-                    <img class="h-6 w-auto md:h-8" src="./assets/github-mark.svg" alt="Github Repo Link Image">
-                </a>
-                <a href="https://discord.gg/bMsvxN3jPY">
-                    <img class="h-6 w-auto md:h-8" src="./assets/discord-mark.svg" alt="Discord Server Link Image">
-                </a>
+    <footer class="py-12 dark-bg">
+        <div class="container mx-auto px-6">
+            <div class="flex flex-col md:flex-row justify-between items-center">
+                <div class="mb-8 md:mb-0">
+                    <div class="flex items-center">
+                        <img class="h-10 w-auto" src="./assets/BlenderCharacterProject_Icon.svg" alt="CharMorph Logo">
+                        <span class="text-xl font-bold text-red-500 ml-2">CharMorph</span>
+                    </div>
+                    <p class="text-gray-400 mt-4 max-w-md">Empowering artists with professional-grade character creation tools for Blender.</p>
+                </div>
+                
+                <div class="flex space-x-6">
+                    <a href="https://github.com/Upliner/CharMorph" class="text-gray-400 hover:text-red-500 transition duration-300">
+                        <img class="h-8 w-auto" src="./assets/github-mark.svg" alt="Github Repo Link Image">
+                    </a>
+                    <a href="https://discord.gg/bMsvxN3jPY" class="text-gray-400 hover:text-red-500 transition duration-300">
+                        <img class="h-8 w-auto" src="./assets/discord-mark.svg" alt="Github Repo Link Image">
+                    </a>
+                </div>
             </div>
         </div>
     </footer>
-
+    <!-- JavaScript for mobile menu toggle -->
     <script>
-        window.addEventListener('scroll', function () {
-            const scrollBg = document.getElementById('scrollBg');
-            const scrollPosition = window.scrollY;
-            // Adjust the scroll factor to control speed
-            const scrollFactor = 2;
-            scrollBg.style.backgroundPositionX = `${scrollPosition * scrollFactor}px`;
+        const mobileMenuButton = document.getElementById('mobile-menu-button');
+        const mobileMenu = document.getElementById('mobile-menu');
+
+        mobileMenuButton.addEventListener('click', () => {
+            mobileMenu.classList.toggle('hidden');
         });
     </script>
-
-</body>
+ </body>
 </html>

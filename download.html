@@ -4,17 +4,73 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="shortcut icon" type="image/x-icon" href="./assets/favicon.ico">
-    <title>Download Charmorph | Blender Character Project</title>
+    <title>Download | CharMorph</title>
     <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap');
+        
+        body {
+            font-family: 'Poppins', sans-serif;
+        }
+        
+        .hero-section {
+            background: linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7)), url('https://images.unsplash.com/photo-1557682250-1340ab1d67a7');
+            background-size: cover;
+            background-position: center;
+            background-attachment: fixed;
+            height: 400px;
+            position: relative;
+        }
+
+        .dark-bg {
+            background-color: #1A1A1A;
+        }
+        
+        .secondary-bg {
+            background-color: #333333;
+        }
+        
+        .fade-in {
+            opacity: 0;
+            animation: fadeIn ease-in 1;
+            animation-fill-mode: forwards;
+            animation-duration: 1s;
+            animation-delay: 0.3s;
+        }
+
+        @keyframes fadeIn {
+            0% { opacity: 0; transform: translateY(20px); }
+            100% { opacity: 1; transform: translateY(0); }
+        }
+        
+        .feature-card:hover {
+            transform: translateY(-5px);
+            transition: all 0.3s ease;
+        }
+        
+        .gradient-text {
+            background: linear-gradient(90deg, #E53E3E, #F56565);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        
+        .release-card {
+            transition: all 0.3s ease;
+        }
+        
+        .release-card:hover {
+            transform: translateY(-5px);
+        }
+    </style>
     <script>
         document.addEventListener('DOMContentLoaded', function() {
             const countdownElement = document.getElementById('countdown');
             const releasesContainer = document.getElementById('releases-container');
+            const manualDownloadLink = document.getElementById('manual-download');
             let latestReleaseUrl = '';
-
             const githubRepo = 'Upliner/CharMorph'; // Replace with your GitHub username and repo name
             const githubApiUrl = `https://api.github.com/repos/${githubRepo}/releases`;
-
+            
             // Fetch GitHub releases
             fetch(githubApiUrl)
                 .then(response => response.json())
@@ -22,7 +78,16 @@
                     if (data.length > 0) {
                         // Get the latest release
                         const latestRelease = data[0];
-                        latestReleaseUrl = latestRelease.assets[0].browser_download_url; // Get the download URL of the first asset
+                        
+                        // Check if the release has assets, otherwise use zipball
+                        if (latestRelease.assets && latestRelease.assets.length > 0) {
+                            latestReleaseUrl = latestRelease.assets[0].browser_download_url; // Get the download URL of the first asset
+                        } else {
+                            latestReleaseUrl = latestRelease.zipball_url; // Use zipball if no assets
+                        }
+                        
+                        // Set manual download link href
+                        manualDownloadLink.href = latestReleaseUrl;
                         
                         // Update the download link for the automatic download
                         setTimeout(() => {
@@ -32,15 +97,23 @@
                         data.forEach(release => {
                             // Create release element
                             const releaseElement = document.createElement('div');
-                            releaseElement.classList.add('bg-[#383737]', 'p-6', 'rounded-lg', 'mb-4');
+                            releaseElement.classList.add('dark-bg', 'p-6', 'rounded-xl', 'mb-4', 'shadow-lg', 'release-card');
                             
-                            // Create list of assets
-                            const assetList = release.assets.map(asset => `
-                                <a href="${asset.browser_download_url}" class="text-red-600 underline block mt-2">Download ${asset.name}</a>
-                            `).join('');
+                            // Check if release has assets, otherwise include zipball link
+                            let assetList = '';
+                            if (release.assets && release.assets.length > 0) {
+                                assetList = release.assets.map(asset => `
+                                    <a href="${asset.browser_download_url}" class="text-red-500 hover:text-red-400 transition duration-300 underline block mt-2">Download ${asset.name}</a>
+                                `).join('');
+                            } else {
+                                assetList = `
+                                    <a href="${release.zipball_url}" class="text-red-500 hover:text-red-400 transition duration-300 underline block mt-2">Download Source Code (zip)</a>
+                                    <a href="${release.tarball_url}" class="text-red-500 hover:text-red-400 transition duration-300 underline block mt-2">Download Source Code (tar.gz)</a>
+                                `;
+                            }
                             
                             releaseElement.innerHTML = `
-                                <h3 class="text-xl font-semibold text-red-600">${release.name}</h3>
+                                <h3 class="text-xl font-semibold text-red-500">${release.name}</h3>
                                 <p class="text-gray-300 mt-2">Released on ${new Date(release.published_at).toLocaleDateString()}</p>
                                 ${assetList}
                             `;
@@ -48,19 +121,20 @@
                         });
                     } else {
                         releasesContainer.innerHTML = '<p class="text-gray-300">No releases found.</p>';
+                        manualDownloadLink.href = `https://github.com/${githubRepo}/archive/refs/heads/main.zip`;
                     }
                 })
                 .catch(error => {
                     console.error('Error fetching releases:', error);
                     releasesContainer.innerHTML = '<p class="text-red-500">Failed to load releases.</p>';
+                    manualDownloadLink.href = `https://github.com/${githubRepo}/archive/refs/heads/main.zip`;
                 });
-
+                
             // Countdown Timer for the latest release download
             let countdown = 5;
             const timer = setInterval(function() {
                 countdownElement.textContent = countdown;
                 countdown--;
-
                 if (countdown < 0) {
                     clearInterval(timer);
                 }
@@ -68,50 +142,110 @@
         });
     </script>
 </head>
-<body class="font-sans text-gray-800 bg-[#383737]">
-    <header class="bg-[#262626] p-6">
-        <div class="container mx-auto flex justify-between items-center">
-            <div class="flex flex-shrink-0 items-center">
-          <a href="./index.html">   
-          <img class="h-16 w-auto" src="./assets/BlenderCharacterProject_Icon.svg" alt="Blender Character Project Logo">
-        </a>
-        <h1 class="text-2xl font-bold text-red-600"><a href="./index.html">CharMorph | Blender Character Project</a></h1>
-        </div>
-            <nav class="space-x-4">
-                <a href="./gallery.html" class="text-gray-300 hover:text-red-600">Gallery</a>
-                <a href="./about.html" class="text-gray-300 hover:text-red-600">About</a>
-                <a href="./docs/html/" class="text-gray-300 hover:text-red-600">Docs</a>
-            </nav>
-            <button onclick="window.location.href='download.html'" class="bg-red-500 text-black px-6 py-2 rounded-full hover:bg-red-600">Download</button>
-        </header>
-    <div class="container mx-auto text-center py-16">
-        <h1 class="text-4xl font-extrabold text-red-600">Your Download Will Start Shortly</h1>
-        <p class="mt-4 text-xl text-gray-300">Starting in <span id="countdown" class="font-bold">5</span> seconds...</p>
-        <p class="mt-8 text-gray-500">If the download does not start automatically, <a href="#" id="manual-download" class="text-red-600 underline">click here</a>.</p>
-    </div>
+<body class="font-sans text-gray-800 dark-bg">
 
-    <!-- Section for older releases -->
-    <section class="py-12 bg-[#262626]">
-        <div class="container mx-auto">
-            <h2 class="text-3xl font-semibold text-gray-300 mb-8 text-center">Previous Releases</h2>
-            <div id="releases-container" class="space-y-4">
-                <!-- Releases will be dynamically loaded here -->
+    <!-- Header -->
+    <header class="dark-bg sticky top-0 z-50 shadow-lg">
+        <div class="container mx-auto flex flex-wrap justify-between items-center py-4 px-6">
+            <div class="flex flex-shrink-0 items-center">
+                <a href="./index.html" class="flex items-center">
+                    <img class="h-10 w-auto md:h-12" src="./assets/BlenderCharacterProject_Icon.svg" alt="CharMorph Logo">
+                    <h1 class="text-xl md:text-2xl font-bold text-red-500 ml-2 tracking-tight">
+                        CharMorph
+                    </h1>
+                </a>
+            </div>
+            <nav class="hidden md:flex items-center space-x-8">
+                <a href="./gallery.html" class="text-gray-300 hover:text-red-500 transition duration-300">Gallery</a>
+                <a href="./about.html" class="text-gray-300 hover:text-red-500 transition duration-300">About</a>
+                <a href="./docs/html/" class="text-gray-300 hover:text-red-500 transition duration-300">Documentation</a>
+                <button onclick="window.location.href='download.html'" class="bg-red-500 text-white px-6 py-2 rounded-lg hover:bg-red-700 transition duration-300 font-medium">Download</button>
+            </nav>
+            <button id="mobile-menu-button" class="md:hidden text-white focus:outline-none">
+                <svg class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-7 6h7"></path>
+                </svg>
+            </button>
+        </div>
+        <!-- Mobile menu (hidden by default) -->
+        <div id="mobile-menu" class="md:hidden hidden secondary-bg py-4 px-6">
+            <a href="./gallery.html" class="block text-gray-300 hover:text-red-500 py-2">Gallery</a>
+            <a href="./about.html" class="block text-gray-300 hover:text-red-500 py-2">About</a>
+            <a href="./docs/html/" class="block text-gray-300 hover:text-red-500 py-2">Documentation</a>
+            <button onclick="window.location.href='download.html'" class="mt-4 w-full bg-red-500 text-white px-4 py-2 rounded-lg hover:bg-red-700">Download</button>
+        </div>
+    </header>
+
+    <!-- Hero Section -->
+    <section class="hero-section flex items-center justify-center">
+        <div class="container mx-auto text-center px-4 md:px-0">
+            <h1 class="text-4xl md:text-6xl font-bold text-white mb-6 leading-tight fade-in">Download <span class="gradient-text">CharMorph</span></h1>
+            <p class="text-xl md:text-2xl text-gray-200 max-w-2xl mx-auto mb-10 leading-relaxed fade-in">
+                Get started with our open-source character creation tool
+            </p>
+        </div>
+    </section>
+
+    <!-- Download Status Section -->
+    <section class="py-16 secondary-bg">
+        <div class="container mx-auto text-center px-6">
+            <div class="max-w-2xl mx-auto bg-dark-bg p-8 rounded-xl shadow-lg fade-in">
+                <h2 class="text-3xl font-bold text-red-500 mb-4">Your Download Will Start Shortly</h2>
+                <p class="mt-4 text-xl text-gray-300">Starting in <span id="countdown" class="font-bold text-red-500">5</span> seconds...</p>
+                <p class="mt-6 text-gray-400">If the download does not start automatically, <a href="#" id="manual-download" class="text-red-500 hover:text-red-400 transition duration-300 underline font-medium">click here</a>.</p>
             </div>
         </div>
     </section>
+
+    <!-- Previous Releases Section -->
+    <section class="py-24 dark-bg">
+        <div class="container mx-auto px-6">
+            <div class="mb-12 text-center">
+                <h2 class="text-3xl md:text-4xl font-bold text-white mb-4">Previous Releases</h2>
+                <div class="w-24 h-1 bg-red-500 mx-auto mb-6"></div>
+                <p class="text-xl text-gray-400 max-w-2xl mx-auto">Access older versions of CharMorph</p>
+            </div>
+            
+            <div id="releases-container" class="max-w-4xl mx-auto space-y-4">
+                <!-- Releases will be dynamically loaded here -->
+                <div class="dark-bg p-6 rounded-xl shadow-lg mb-4 release-card">
+                </div>
+            </div>
+        </div>
+    </section>
+
     <!-- Footer -->
-    <footer class="py-6 bg-[#262626]">
-        <div class="container mx-auto flex justify-between items-center">
-            <p class="text-gray-300">© 2024 CharMorph</p>
-            <div class="flex space-x-4">
-                <a href="https://github.com/Upliner/CharMorph">   
-                    <img class="h-8 w-auto" src="./assets/github-mark.svg" alt="Github Repo Link Image">
-            </a>
-                  <a href="https://discord.gg/bMsvxN3jPY">   
-                    <img class="h-8 w-auto" src="./assets/discord-mark.svg" alt="Discord Server Link Image">
-                </a>
+    <footer class="py-12 dark-bg">
+        <div class="container mx-auto px-6">
+            <div class="flex flex-col md:flex-row justify-between items-center">
+                <div class="mb-8 md:mb-0">
+                    <div class="flex items-center">
+                        <img class="h-10 w-auto" src="./assets/BlenderCharacterProject_Icon.svg" alt="CharMorph Logo">
+                        <span class="text-xl font-bold text-red-500 ml-2">CharMorph</span>
+                    </div>
+                    <p class="text-gray-400 mt-4 max-w-md">Empowering artists with professional-grade character creation tools for Blender.</p>
+                </div>
+                
+                <div class="flex space-x-6">
+                    <a href="https://github.com/Upliner/CharMorph" class="text-gray-400 hover:text-red-500 transition duration-300">
+                        <img class="h-8 w-auto" src="./assets/github-mark.svg" alt="Github Repo Link Image">
+                    </a>
+                    <a href="https://discord.gg/bMsvxN3jPY" class="text-gray-400 hover:text-red-500 transition duration-300">
+                        <img class="h-8 w-auto" src="./assets/discord-mark.svg" alt="Discord Server Link Image">
+                    </a>
+                </div>
             </div>
         </div>
     </footer>
+
+    <!-- JavaScript for mobile menu toggle -->
+    <script>
+        const mobileMenuButton = document.getElementById('mobile-menu-button');
+        const mobileMenu = document.getElementById('mobile-menu');
+
+        mobileMenuButton.addEventListener('click', () => {
+            mobileMenu.classList.toggle('hidden');
+        });
+    </script>
 </body>
 </html>
