@@ -14,7 +14,7 @@
         }
         
         .hero-section {
-            background: linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7)), url('https://images.unsplash.com/photo-1557682250-1340ab1d67a7');
+            background: linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7));
             background-size: cover;
             background-position: center;
             background-attachment: fixed;
@@ -63,83 +63,89 @@
         }
     </style>
     <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            const countdownElement = document.getElementById('countdown');
-            const releasesContainer = document.getElementById('releases-container');
-            const manualDownloadLink = document.getElementById('manual-download');
-            let latestReleaseUrl = '';
-            const githubRepo = 'Upliner/CharMorph'; // Replace with your GitHub username and repo name
-            const githubApiUrl = `https://api.github.com/repos/${githubRepo}/releases`;
-            
-            // Fetch GitHub releases
-            fetch(githubApiUrl)
-                .then(response => response.json())
-                .then(data => {
-                    if (data.length > 0) {
-                        // Get the latest release
-                        const latestRelease = data[0];
-                        
-                        // Check if the release has assets, otherwise use zipball
-                        if (latestRelease.assets && latestRelease.assets.length > 0) {
-                            latestReleaseUrl = latestRelease.assets[0].browser_download_url; // Get the download URL of the first asset
-                        } else {
-                            latestReleaseUrl = latestRelease.zipball_url; // Use zipball if no assets
-                        }
-                        
-                        // Set manual download link href
-                        manualDownloadLink.href = latestReleaseUrl;
-                        
-                        // Update the download link for the automatic download
-                        setTimeout(() => {
-                            window.location.href = latestReleaseUrl;
-                        }, 5000); // 5 seconds delay
-                        
-                        data.forEach(release => {
-                            // Create release element
-                            const releaseElement = document.createElement('div');
-                            releaseElement.classList.add('dark-bg', 'p-6', 'rounded-xl', 'mb-4', 'shadow-lg', 'release-card');
-                            
-                            // Check if release has assets, otherwise include zipball link
-                            let assetList = '';
-                            if (release.assets && release.assets.length > 0) {
-                                assetList = release.assets.map(asset => `
-                                    <a href="${asset.browser_download_url}" class="text-red-500 hover:text-red-400 transition duration-300 underline block mt-2">Download ${asset.name}</a>
-                                `).join('');
-                            } else {
-                                assetList = `
-                                    <a href="${release.zipball_url}" class="text-red-500 hover:text-red-400 transition duration-300 underline block mt-2">Download Source Code (zip)</a>
-                                    <a href="${release.tarball_url}" class="text-red-500 hover:text-red-400 transition duration-300 underline block mt-2">Download Source Code (tar.gz)</a>
-                                `;
-                            }
-                            
-                            releaseElement.innerHTML = `
-                                <h3 class="text-xl font-semibold text-red-500">${release.name}</h3>
-                                <p class="text-gray-300 mt-2">Released on ${new Date(release.published_at).toLocaleDateString()}</p>
-                                ${assetList}
-                            `;
-                            releasesContainer.appendChild(releaseElement);
-                        });
-                    } else {
-                        releasesContainer.innerHTML = '<p class="text-gray-300">No releases found.</p>';
-                        manualDownloadLink.href = `https://github.com/${githubRepo}/archive/refs/heads/main.zip`;
-                    }
-                })
-                .catch(error => {
-                    console.error('Error fetching releases:', error);
-                    releasesContainer.innerHTML = '<p class="text-red-500">Failed to load releases.</p>';
-                    manualDownloadLink.href = `https://github.com/${githubRepo}/archive/refs/heads/main.zip`;
-                });
+document.addEventListener('DOMContentLoaded', function() {
+    const countdownElement = document.getElementById('countdown');
+    const releasesContainer = document.getElementById('releases-container');
+    const manualDownloadLink = document.getElementById('manual-download');
+    let latestReleaseUrl = '';
+    const githubRepo = 'Upliner/CharMorph'; // Replace with your GitHub username and repo name
+    const githubApiUrl = `https://api.github.com/repos/${githubRepo}/releases`;
+    
+    // Fetch GitHub releases
+    fetch(githubApiUrl)
+        .then(response => response.json())
+        .then(data => {
+            if (data.length > 0) {
+                // Sort releases by date (newest first)
+                data.sort((a, b) => new Date(b.published_at) - new Date(a.published_at));
                 
-            // Countdown Timer for the latest release download
-            let countdown = 5;
-            const timer = setInterval(function() {
-                countdownElement.textContent = countdown;
-                countdown--;
-                if (countdown < 0) {
-                    clearInterval(timer);
+                // Get the latest release
+                const latestRelease = data[0];
+                
+                // Check if the release has assets, otherwise use zipball
+                if (latestRelease.assets && latestRelease.assets.length > 0) {
+                    latestReleaseUrl = latestRelease.assets[0].browser_download_url; // Get the download URL of the first asset
+                } else {
+                    latestReleaseUrl = latestRelease.zipball_url; // Use zipball if no assets
                 }
-            }, 1000);
+                
+                // Set manual download link href
+                manualDownloadLink.href = latestReleaseUrl;
+                
+                // Update the download link for the automatic download
+                setTimeout(() => {
+                    window.location.href = latestReleaseUrl;
+                }, 5000); // 5 seconds delay
+                
+                // Clear existing content
+                releasesContainer.innerHTML = '';
+                
+                data.forEach(release => {
+                    // Create release element
+                    const releaseElement = document.createElement('div');
+                    releaseElement.classList.add('dark-bg', 'p-6', 'rounded-xl', 'mb-4', 'shadow-lg', 'release-card');
+                    
+                    // Check if release has assets, otherwise include zipball link
+                    let assetList = '';
+                    if (release.assets && release.assets.length > 0) {
+                        assetList = release.assets.map(asset => `
+                            <a href="${asset.browser_download_url}" class="text-red-500 hover:text-red-400 transition duration-300 underline block mt-2">Download ${asset.name}</a>
+                        `).join('');
+                    } else {
+                        assetList = `
+                            <a href="${release.zipball_url}" class="text-red-500 hover:text-red-400 transition duration-300 underline block mt-2">Download Source Code (zip)</a>
+                            <a href="${release.tarball_url}" class="text-red-500 hover:text-red-400 transition duration-300 underline block mt-2">Download Source Code (tar.gz)</a>
+                        `;
+                    }
+                    
+                    releaseElement.innerHTML = `
+                        <h3 class="text-xl font-semibold text-red-500">${release.name}</h3>
+                        <p class="text-gray-300 mt-2">Released on ${new Date(release.published_at).toLocaleDateString()}</p>
+                        ${assetList}
+                    `;
+                    releasesContainer.appendChild(releaseElement);
+                });
+            } else {
+                releasesContainer.innerHTML = '<p class="text-gray-300">No releases found.</p>';
+                manualDownloadLink.href = `https://github.com/${githubRepo}/archive/refs/heads/main.zip`;
+            }
+        })
+        .catch(error => {
+            console.error('Error fetching releases:', error);
+            releasesContainer.innerHTML = '<p class="text-red-500">Failed to load releases.</p>';
+            manualDownloadLink.href = `https://github.com/${githubRepo}/archive/refs/heads/main.zip`;
         });
+        
+    // Countdown Timer for the latest release download
+    let countdown = 5;
+    const timer = setInterval(function() {
+        countdownElement.textContent = countdown;
+        countdown--;
+        if (countdown < 0) {
+            clearInterval(timer);
+        }
+    }, 1000);
+});
     </script>
 </head>
 <body class="font-sans text-gray-800 dark-bg">
